@@ -25,6 +25,8 @@ if [[ $(jq '.License.SerialNumber' $COMET_DIR/$COMET_CFG) == '""' || -n "$COMET_
 		exit 1
 	fi
 	echo "Writing Comet license key"
+	# Can't get `jq` to directly edit a json file...
+	# There has got to be a better way of doing this, but it was late and my google-fu was running out.  Hacked.
 	cp $COMET_DIR/$COMET_CFG $COMET_DIR/$COMET_CFG.tmp
 	jq --arg LICENSE "$COMET_LICENSE" '.License.SerialNumber = $LICENSE' $COMET_DIR/$COMET_CFG.tmp > $COMET_DIR/$COMET_CFG
 	rm $COMET_DIR/$COMET_CFG.tmp
