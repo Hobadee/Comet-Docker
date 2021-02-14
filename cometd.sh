@@ -60,6 +60,14 @@ if [[ -n "$COMET_ADMIN_PASS" ]]; then
 fi
 
 
+# Handle IP Whitelist environment variable
+# To allow for regex and whatnot, we are passing args straight through and following the format documented here:
+# https://account.cometbackup.com/docs/comet-server-configuration#ip-allowlist
+if [[ -n "$COMET_ADMIN_IP_WHITELIST" ]]; then
+	jq_filter_add ".AdminUsers[].IPWhitelist = \"$COMET_ADMIN_IP_WHITELIST\""
+fi
+
+
 # Write new config and save it
 if [[ -s $JQTMP ]]; then
 	echo -n 'Updating config... '
