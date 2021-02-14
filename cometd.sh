@@ -8,6 +8,8 @@ COMET_CFG=cometd.cfg
 #COMET_LICENSE			- Comet license code
 #COMET_LICENSE_FORCE	- Force the Comet license to be re-added to the config file
 #COMET_ARGUMENTS		- Additional arguments to pass to the Comet server
+#COMET_ADMIN_USER		- Admin user #0 username
+#COMET_ADMIN_PASS		- Admin user #0 password
 
 cd $COMET_DIR
 
@@ -38,6 +40,16 @@ if [[ $(jq '.License.SerialNumber' $COMET_DIR/$COMET_CFG) == '""' || -n "$COMET_
 		exit 1
 	fi
 	jq_filter_add ".License.SerialNumber = \"$COMET_LICENSE\""
+fi
+
+
+# Handle environment variables pertaining to the Admin user
+if [[ -n "$COMET_ADMIN_USER" ]]; then
+	jq_filter_add ".AdminUsers[0].Username = \"$COMET_ADMIN_USER\""
+fi
+if [[ -n "$COMET_ADMIN_PASS" ]]; then
+	jq_filter_add ".AdminUsers[0].PasswordFormat = 0"
+	jq_filter_add ".AdminUsers[0].Password = \"$COMET_ADMIN_PASS\""
 fi
 
 

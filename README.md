@@ -9,8 +9,10 @@ To run this container, you will need a valid Comet Enterprise Server License.  (
 Currently this container is very minimalistic.  This may or may not change in the future.
 
 ## Variables:
-Enviornment Variable | Purpose
--------------------- | ----
-COMET_LICENSE        | REQUIRED on first run!  Your Comet Enterprise Server License key
-COMET_LICENSE_FORCE  | Force the Comet license to be re-added to the config file
-COMET_ARGUMENTS      | Additional arguments to pass to the Comet server
+Enviornment Variable    | Purpose
+----------------------- | ----
+COMET_LICENSE           | REQUIRED on first run!  Your Comet Enterprise Server License key
+COMET_LICENSE_FORCE     | Force the Comet license to be re-added to the config file
+COMET_ARGUMENTS         | Additional arguments to pass to the Comet server
+COMET_ADMIN_USER        | Primary admin username (Defaults to "admin" if never set)
+COMET_ADMIN_PASS        | Primary admin password (Defaults to "admin" if never set)
