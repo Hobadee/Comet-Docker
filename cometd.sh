@@ -15,8 +15,14 @@ cd "$COMET_DIR"
 
 # If no config, create it
 if [[ ! -f "$COMET_DIR/$COMET_CFG" ]]; then
-	echo "Creating default Comet config..."
-	"$COMET_DIR/$COMET_BIN" -ValidateConfigOnly
+	echo -n 'Creating default Comet config... '
+	"$COMET_DIR/$COMET_BIN" -ValidateConfigOnly > /dev/null 2>&1
+	if [[ $? == 0 ]]; then
+		echo -e '\e[32mDone!\e[0m'
+	else
+		echo -e '\e[31mFailed!\e[0m'
+		exit 1
+	fi
 fi
 
 # Create tempfiles for jq filters
@@ -36,7 +42,8 @@ jq_filter_add () {
 if [[ $(jq '.License.SerialNumber' "$COMET_DIR/$COMET_CFG") == '""' || -n "$COMET_LICENSE_FORCE" ]]; then
 	if [[ -z "$COMET_LICENSE" ]]; then
 		# No license key set and none provided.  Exit.
-		echo "No Comet license key provided."
+		echo -e '\e[31mNo Comet license key provided!\e[0m'
+		echo -e '\e[31mProvide one using the "COMET_LICENSE" environment variable\e[0m'
 		exit 1
 	fi
 	jq_filter_add ".License.SerialNumber = \"$COMET_LICENSE\""
@@ -55,15 +62,16 @@ fi
 
 # Write new config and save it
 if [[ -s $JQTMP ]]; then
-	echo "Updating config"
+	echo -n 'Updating config... '
 	CFGTMP=$(mktemp)
 	jq -f "$JQTMP" "$COMET_DIR/$COMET_CFG" > "$CFGTMP"
 	if [[ $? != 0 ]]; then
-		echo "Failed to update config file.  Exiting."
+		echo -e '\e[31mFailed to update config file!  Exiting.\e[0m'
 		exit 1
 	fi
 	mv "$CFGTMP" "$COMET_DIR/$COMET_CFG"
 	rm -f $CFGTMP
+	echo -e '\e[32mComet config updated!\e[0m'
 fi
 
 # Cleanup temp files
