@@ -2,7 +2,7 @@
 
 A docker container with the Comet Enterprise Backup server. (https://cometbackup.com/)
 
-You will need the CometD server tarball from their website to build your own docker image.  Place the tarball in the `cometbackup` directory and update the `COMETD_TARBALL` variable in the Dockerfile.
+You will need the CometD server tarball from their website to build your own docker image.  Place the tarball in the `cometbackup` directory and update the `COMETD_TARBALL` ARG in the Dockerfile.
 
 To run this container, you will need a valid Comet Enterprise Server License.  (These are currently available for free on their website.)
 
