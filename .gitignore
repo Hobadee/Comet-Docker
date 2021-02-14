@@ -1,3 +1,14 @@
+######################
+# Manual ignore list #
+######################
+
+# Ignore all cometd binaries for now since we aren't supposed to distribute them
+cometbackup/*.xz
+
+
+#########################
+# Automated Ignore List #
+#########################
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows

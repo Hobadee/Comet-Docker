@@ -1,8 +1,9 @@
 FROM alpine:latest
 LABEL maintainer="eric@kincl.net"
+LABEL version="1.0.1"
 
 # Enviornment Variables
-ENV COMETD_TARBALL="cometd-20.12.5.linux_amd64.tar.xz"
+ARG COMETD_TARBALL="cometd-20.12.5.linux_amd64.tar.xz"
 
 # Install Comet Dependencies
 RUN apk update && apk add \
