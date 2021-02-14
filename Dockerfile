@@ -1,5 +1,6 @@
 FROM alpine:latest
 LABEL maintainer="eric@kincl.net"
+LABEL version="1.0.1"
 
 # Enviornment Variables
 ARG COMETD_TARBALL="cometd-20.12.5.linux_amd64.tar.xz"
