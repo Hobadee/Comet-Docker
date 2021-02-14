@@ -11,12 +11,12 @@ COMET_CFG=cometd.cfg
 #COMET_ADMIN_USER		- Admin user #0 username
 #COMET_ADMIN_PASS		- Admin user #0 password
 
-cd $COMET_DIR
+cd "$COMET_DIR"
 
 # If no config, create it
-if [[ ! -f $COMET_DIR/$COMET_CFG ]]; then
+if [[ ! -f "$COMET_DIR/$COMET_CFG" ]]; then
 	echo "Creating default Comet config..."
-	$COMET_DIR/$COMET_BIN -ValidateConfigOnly
+	"$COMET_DIR/$COMET_BIN" -ValidateConfigOnly
 fi
 
 # Create tempfiles for jq filters
@@ -33,7 +33,7 @@ jq_filter_add () {
 }
 
 # Check if we have a license set yet and add if not
-if [[ $(jq '.License.SerialNumber' $COMET_DIR/$COMET_CFG) == '""' || -n "$COMET_LICENSE_FORCE" ]]; then
+if [[ $(jq '.License.SerialNumber' "$COMET_DIR/$COMET_CFG") == '""' || -n "$COMET_LICENSE_FORCE" ]]; then
 	if [[ -z "$COMET_LICENSE" ]]; then
 		# No license key set and none provided.  Exit.
 		echo "No Comet license key provided."
