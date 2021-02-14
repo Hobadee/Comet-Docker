@@ -36,7 +36,7 @@ jq_filter_add () {
 if [[ $(jq '.License.SerialNumber' "$COMET_DIR/$COMET_CFG") == '""' || -n "$COMET_LICENSE_FORCE" ]]; then
 	if [[ -z "$COMET_LICENSE" ]]; then
 		# No license key set and none provided.  Exit.
-		echo "No Comet license key provided."
+		echo "No Comet license key provided.  Provide one using the \"COMET_LICENSE\" environment variable"
 		exit 1
 	fi
 	jq_filter_add ".License.SerialNumber = \"$COMET_LICENSE\""
