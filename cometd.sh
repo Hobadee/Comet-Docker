@@ -17,6 +17,19 @@ if [[ ! -f $COMET_DIR/$COMET_CFG ]]; then
 	$COMET_DIR/$COMET_BIN -ValidateConfigOnly
 fi
 
+# Create tempfiles for jq filters
+JQTMP=$(mktemp)
+
+# function to add jq filters to the JQTMP file.
+jq_filter_add () {
+	# If the file contains data, prepend a JQ pipe
+	if [[ -s "$JQTMP" ]]; then
+		echo "| $@" >> "$JQTMP"
+	else
+		echo "$@" >> "$JQTMP"
+	fi
+}
+
 # Check if we have a license set yet and add if not
 if [[ $(jq '.License.SerialNumber' $COMET_DIR/$COMET_CFG) == '""' || -n "$COMET_LICENSE_FORCE" ]]; then
 	if [[ -z "$COMET_LICENSE" ]]; then
@@ -24,12 +37,24 @@ if [[ $(jq '.License.SerialNumber' $COMET_DIR/$COMET_CFG) == '""' || -n "$COMET_
 		echo "No Comet license key provided."
 		exit 1
 	fi
-	echo "Writing Comet license key"
-	# Can't get `jq` to directly edit a json file...
-	# There has got to be a better way of doing this, but it was late and my google-fu was running out.  Hacked.
-	cp $COMET_DIR/$COMET_CFG $COMET_DIR/$COMET_CFG.tmp
-	jq --arg LICENSE "$COMET_LICENSE" '.License.SerialNumber = $LICENSE' $COMET_DIR/$COMET_CFG.tmp > $COMET_DIR/$COMET_CFG
-	rm $COMET_DIR/$COMET_CFG.tmp
+	jq_filter_add ".License.SerialNumber = \"$COMET_LICENSE\""
 fi
 
-$COMET_DIR/$COMET_BIN $COMET_ARGUMENTS
+
+# Write new config and save it
+if [[ -s $JQTMP ]]; then
+	echo "Updating config"
+	CFGTMP=$(mktemp)
+	jq -f "$JQTMP" "$COMET_DIR/$COMET_CFG" > "$CFGTMP"
+	if [[ $? != 0 ]]; then
+		echo "Failed to update config file.  Exiting."
+		exit 1
+	fi
+	mv "$CFGTMP" "$COMET_DIR/$COMET_CFG"
+	rm -f $CFGTMP
+fi
+
+# Cleanup temp files
+rm -f "$JQTMP"
+
+"$COMET_DIR/$COMET_BIN" $COMET_ARGUMENTS
