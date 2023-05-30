@@ -1,3 +1,6 @@
+# DEPRECATED
+Comet has released their own docker file: https://github.com/cometbackup/comet-server-docker
+
 # Comet Enterprise Backup Server
 
 A docker container with the Comet Enterprise Backup server. (https://cometbackup.com/)
